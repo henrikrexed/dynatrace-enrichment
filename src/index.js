@@ -5,16 +5,12 @@ async function main() {
       await sleep(5000);
       try {
 
-         console.log("opening file");
-         var iteration=0;
-         const max_iteration=1000;
-         var json;
-         do{
-             iteration++;
-             console.log("iteration : "+iteration)
-         } while ( !fs.existsSync(name ) && iteration<max_iteration)
+           var json;
 
-         if(fs.existsSync(name )){
+
+         for (let name of ['dt_metadata_e617c525669e072eebe3d0f08212e8f2.json', '/var/lib/dynatrace/enrichment/dt_metadata.json']) {
+             if(fs.existsSync(name ) )
+             {
              json=JSON.parse(fs.readFileSync(name.startsWith("/var") ?
                                     name : fs.readFileSync(name).toString('utf-8').trim()).toString('utf-8'), (key, value) => {
                                                  console.log(key);
@@ -23,12 +19,11 @@ async function main() {
                                                  process.env[key] = value;
                                                }
                                                 );
+             }
+         }
+         console.log(JSON.stringify(process.env))
 
-             console.log(JSON.stringify(process.env))
-         }
-         else {
-            console.log("No magic file in the workload")
-         }
+
       } catch(error) {
         console.log(error);
         }
@@ -36,7 +31,8 @@ async function main() {
       }
 
 var dtmetadata={}
-const name ='dt_metadata_e617c525669e072eebe3d0f08212e8f2.json'
+
+//const name ='dt_metadata_e617c525669e072eebe3d0f08212e8f2.json'
 
 main();
 

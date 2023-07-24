@@ -26,49 +26,40 @@ spec:
         send_batch_size : 800
 
       memory_limiter:
-         check_interval: 1s
-         limit_percentage: 70
-         spike_limit_percentage: 30
+        check_interval: 1s
+        limit_percentage: 70
+        spike_limit_percentage: 30
 
-      transform:
-         error_mode: ignore
-         trace_statements:
-           - context: span
-             statements:
-             - set(attributes["dt.entity.process_group_instance"], ${dt.entity.process_group_instance}) 
-             - set(attributes["dt.entity.host"], ${dt.entity.host}) 
-             - set(attributes["dt.kubernetes.cluster.id"],${dt.kubernetes.cluster.id})
-             - set(attributes["k8s.pod.uid"],${k8s.pod.uid})
-             - set(attributes["k8s.pod.name"],${k8s.pod.name})
-             - set(attributes["k8s.namespace.name"],${k8s.namespace.name})
+      attributes:
+        actions:
+           - key: dt.kubernetes.cluster.id
+             action : insert
+             value: ${dt.kubernetes.cluster.id}
+           - key: "k8s.pod.uid"
+             action : insert
+             value: ${k8s.pod.uid}
+           - key: k8s.pod.name
+             action : insert
+             value: ${k8s.pod.name}
+           - key: k8s.namespace.name
+             action : insert
+             value: ${k8s.namespace.name}
     
-
-           - context: resource
-             statements:
-             - set(attributes["dt.entity.process_group_instance"], ${dt.entity.process_group_instance}) 
-             - set(attributes["dt.entity.host"], ${dt.entity.host}) 
-             - set(attributes["dt.kubernetes.cluster.id"],${dt.kubernetes.cluster.id})
-             - set(attributes["k8s.pod.uid"],${k8s.pod.uid})
-             - set(attributes["k8s.pod.name"],${k8s.pod.name})
-             - set(attributes["k8s.namespace.name"],${k8s.namespace.name})
-    
-         metric_statements:
-           - context: resource
-             statements:
-             - set(attributes["dt.entity.process_group_instance"], ${dt.entity.process_group_instance}) 
-             - set(attributes["dt.entity.host"], ${dt.entity.host}) 
-             - set(attributes["dt.kubernetes.cluster.id"],${dt.kubernetes.cluster.id})
-             - set(attributes["k8s.pod.uid"],${k8s.pod.uid})
-             - set(attributes["k8s.pod.name"],${k8s.pod.name})
-             - set(attributes["k8s.namespace.name"],${k8s.namespace.name})
-           - context: metric
-             statements:
-             - set(attributes["dt.entity.process_group_instance"], ${dt.entity.process_group_instance}) 
-             - set(attributes["dt.entity.host"], ${dt.entity.host}) 
-             - set(attributes["dt.kubernetes.cluster.id"],${dt.kubernetes.cluster.id})
-             - set(attributes["k8s.pod.uid"],${k8s.pod.uid})
-             - set(attributes["k8s.pod.name"],${k8s.pod.name})
-             - set(attributes["k8s.namespace.name"],${k8s.namespace.name})
+      resource:
+        attributes:
+           - key: dt.kubernetes.cluster.id
+             action : insert
+             value: ${dt.kubernetes.cluster.id}
+           - key: "k8s.pod.uid"
+             action : insert
+             value: ${k8s.pod.uid}
+           - key: k8s.pod.name
+             action : insert
+             value: ${k8s.pod.name}
+           - key: k8s.namespace.name
+             action : insert
+             value: ${k8s.namespace.name}
+           
     
     exporters:
       logging:
@@ -83,9 +74,9 @@ spec:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter,transform,batch]
+          processors: [memory_limiter,resource,attributes,batch]
           exporters: [otlp]
         metrics:
           receivers: [otlp]
-          processors: [memory_limiter,transform,batch]
+          processors: [memory_limiter,resource,attributes,batch]
           exporters: [otlp]
