@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dt-enrichment
+  labels:
+    app.kubernetes.io/component: dt-enrichment
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: dt-enrichment
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: dt-enrichment
+    spec:
+      containers:
+        - name: dtenrich
+          image: 'hrexed/dt_enrichment:0.1'
+          imagePullPolicy: Always

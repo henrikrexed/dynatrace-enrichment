@@ -1,0 +1,12 @@
+{
+  "name": "dt-enrich",
+  "version": "0.0.1",
+  "description": "Dt enrichment",
+  "repository": "https://github.com/henrikrexed/dynatrace-collector-enrichment",
+  "main": "index.js",
+  "scripts": {
+    "start": "node  ./index.js"
+  },
+  "author": "Henrik Rexed"
+
+}
